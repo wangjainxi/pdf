@@ -1,22 +1,20 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <component :is="HelloWorld" />
+    <staticPDF/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import staticPDF from './staticPDF/index'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    staticPDF
   },
   data(){
     return{
-      HelloWorld: HelloWorld,
     msg:"Welcome to Your Vue.js App"
     }
   }
