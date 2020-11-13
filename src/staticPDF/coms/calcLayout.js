@@ -23,32 +23,27 @@ export const calcLayoutModule = (arr) => {
 	// 除了表头、合计 每页最多能放26
 	// 200 86 65 50
 
-	function calcMaxAddSize(addPageHeight, size, item, page, newTable) {
+	function calcMaxAddSize(addPageHeight, size, item, page) {
 		console.log('addPageHeight', addPageHeight);
 		console.log('size', size);
-		let needPageSize = 0;
-		let curPageleftSize = 0;
-		let lastPageLeftSize = 0;
-		if (newTable) {
-			console.log('111');
-		} else {
+
+
 			// 当前页剩余还能放多少条,需要根据是不是新table， 是 501 ，不是
-			const curPageleftSize = canAddSize({ addPageHeight, item });
+		const	curPageleftSize = canAddSize({ addPageHeight, item });
 			// if(item.tbName === 'module4'){
 			console.log('curPageleftSize module4', curPageleftSize);
 			// }
 			// if(curPageleftSize > 1) {
 			// 需要多加一个判断 是新加页的
 			// 需要多少页
-			needPageSize = Math.ceil((item.pageSize - curPageleftSize) / calcMaxSize(item));
+			const needPageSize = Math.ceil((item.pageSize - curPageleftSize) / calcMaxSize(item));
 
 			// 除了增加的页数以外   增加的最后一页还有剩余多少条
-			lastPageLeftSize = item.pageSize - curPageleftSize - (needPageSize - 1) * calcMaxSize(item);
+			const lastPageLeftSize = item.pageSize - curPageleftSize - (needPageSize - 1) * calcMaxSize(item);
 
 			//   console.log("curPageleftSize", curPageleftSize)
 			console.log('needPageSize', needPageSize);
 			//   console.log("lastPageLeftSize", lastPageLeftSize)
-		}
 
 		const calcAddInfoArr = calcAddPageInfo({
 			needPageSize,
@@ -175,6 +170,8 @@ export const calcLayoutModule = (arr) => {
 		return temp;
 	}
 
+
+
 	const calcArrStep1 = arr.map((item, index) => {
 		let addInfoArr = [];
 		let isAdd = false;
@@ -202,7 +199,7 @@ export const calcLayoutModule = (arr) => {
 						addPageHeight = reAddPageHeight;
 						addInfoArr = calcAddInfoArr;
 					} else {
-						// 加个判断 能不能放下当前组件
+						// 加个判断 能不能放下当前新的动态组件
 						if (addPageHeight + arr[index].height > pageHeight) {
 							const {
 								// curPageleftSize,
@@ -211,7 +208,7 @@ export const calcLayoutModule = (arr) => {
 								// lastPageLeftSize,
 								reAddPageHeight,
 								calcPage
-							} = calcMaxAddSize(beganMinHeight(), arr[index].pageSize, item, page, true); // 是新table
+							} = calcNewTable(beganMinHeight(),item, page); // 是新table
 							addInfoArr = calcAddInfoArr;
 							isAdd = true;
 							page = calcPage;
@@ -240,6 +237,12 @@ export const calcLayoutModule = (arr) => {
 		item.addPageHeight = addPageHeight;
 		return item;
 	});
+
+
+	function calcNewTable(newAddPageHeight,item, page) {
+
+	}
+
 	console.log('calcArrStep1', calcArrStep1);
 	const calcArrStep3 = [];
 	calcArrStep1.forEach((m) => {
