@@ -5,7 +5,6 @@
         <layout :headerType="'paddingShort'">
           <div v-for="(moduleItem, idx) in layoutItem" :key="idx.name" >
             <div class="content-page-container">
-              {{moduleItem.name}}
               <!-- <div v-if="idx ===  4"> -->
               <component :is="moduleItem.name" v-bind="$attrs" v-if="moduleItem.dataObj" :dataObj="moduleItem.dataObj"/>
               <!-- </div> -->
