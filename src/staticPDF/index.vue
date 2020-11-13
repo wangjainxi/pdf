@@ -139,6 +139,7 @@ export default {
         tbData: periodPopDetail,
         tbColumn: detailTableColumn,
         title: "期末持仓",
+        showSummary: false
       },
       moduleC: {
         assetCurve: lineOption,
@@ -148,7 +149,8 @@ export default {
         periodIncome,
         tbData: periodIncome,
         title: "区间盈亏明细",
-         tbColumn: periodIncomeColumn,
+        tbColumn: periodIncomeColumn,
+        showSummary: true
       },
       moduleE: {
         rateDes,
@@ -156,6 +158,7 @@ export default {
         tbData: hisIncome,
         title: "历史退出产品回报明细",
         tbColumn: hisIncomeColumn,
+        showSummary: true
       },
       moduleF: {
         rateDes,
@@ -163,6 +166,7 @@ export default {
         tbData: dealRecord,
         title: "期间交易记录",
         tbColumn: dealRecordColumn,
+        showSummary: false
       },
     };
   },
@@ -185,11 +189,11 @@ export default {
   },
   methods: {
     async onCalcLayout() {
-      console.log("this.moduleB", this.moduleB);
-      console.log("this.moduleC", this.moduleC);
-      console.log("this.moduleD", this.moduleD);
-      console.log("this.moduleE", this.moduleE);
-      console.log("this.moduleF", this.moduleF);
+      // console.log("this.moduleB", this.moduleB);
+      // console.log("this.moduleC", this.moduleC);
+      // console.log("this.moduleD", this.moduleD);
+      // console.log("this.moduleE", this.moduleE);
+      // console.log("this.moduleF", this.moduleF);
       const ret = await new Promise((resolve) => {
         const arr = [
           {
@@ -199,7 +203,7 @@ export default {
             title: "期末持仓",
             type: 0, // 动态组件1 非动态组件0
             dataObj: this.moduleA,
-            ...this.moduleA,
+            ...this.moduleA
           },
           {
             height: calcHeight(this.moduleB.tbData).height,
@@ -211,6 +215,7 @@ export default {
             dataObj: this.moduleB,
             ...this.moduleB,
             columnAttr: detailTableColumn,
+            isNewTable: true
           },
           // {
           //   height: 745,
@@ -231,6 +236,7 @@ export default {
           //   dataObj: this.moduleD,
           //   ...this.moduleD,
           //   columnAttr: periodIncomeColumn,
+          //   isNewTable: true
           // },
           // {
           //   height: calcHeight(this.moduleE.tbData).height,
@@ -242,6 +248,7 @@ export default {
           //   dataObj: this.moduleE,
           //   ...this.moduleE,
           //   columnAttr: hisIncomeColumn,
+          //   isNewTable: true
           // },
           // {
           //   height: calcHeight(this.moduleF.tbData).height,
@@ -253,10 +260,11 @@ export default {
           //   dataObj: this.moduleF,
           //   ...this.moduleF,
           //   columnAttr: dealRecordColumn,
+          //   isNewTable: true
           // },
         ];
         const calcRet = calcLayoutModule(arr);
-        console.log("calcRet", calcRet);
+        // console.log("calcRet", calcRet);
         resolve(calcRet);
       });
       console.log("ret---", ret);
