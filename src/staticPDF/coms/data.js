@@ -65,3 +65,11 @@ export const dealRecordColumn = [
   { name: "confirmDate", value: "净值日期" },
   { name: "confirmAmount", value: "金额" },
 ]
+
+
+export const periodAssetColumn = [
+  { name: "allAsset", value: "总资产" },
+  { name: "enNav", value: "净值型" },
+  { name: "aAssetType", value: "类固收" },
+  { name: "stockType", value: "股权类" },
+]

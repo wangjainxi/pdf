@@ -1,15 +1,32 @@
 <template>
   <div>
-    <div v-for="(layoutItem, index) in comsData" :key="'layout'+index">
-      <div v-if="layoutItem.length > 0">
+    <div v-for="(arr, index) in comsData" :key="index">
+      <div v-if="arr.length > 0">
         <layout :headerType="'paddingShort'">
-          <div v-for="(moduleItem, idx) in layoutItem" :key="idx.name" >
+          <div v-for="(moduleItem, idx) in arr" :key="idx.name" >
+            <!-- <template slot-scope="props"> -->
             <div class="content-page-container">
-              {{moduleItem.name}}
-              <div v-if="idx < 3">
-              <component :is="moduleItem.name" v-bind="$attrs" v-if="moduleItem.dataObj" :dataObj="moduleItem.dataObj"/>
-              </div>
+              <!-- <component  v-for="(unCaclComsItem, index) in comsData "
+    :key="index" :is="unCaclComsItem[0].name"
+    v-bind="$attrs"
+    /> -->
+            <component :is="moduleItem.name" v-bind="$attrs" v-if="moduleItem.tbData" :tableData="moduleItem.tbData"  :table-column="moduleItem.columnAttr"/>
+              <div v-if="moduleItem.type === 0">
+              <!-- <component :is="moduleItem.name" v-bind="$attrs" /> -->
             </div>
+            </div>
+            <!-- <terminal-asset  v-bind="$attrs"/> -->
+
+            <!-- <layout :headerType="'paddingShort'">
+    <div class="content-page-container">
+      <terminal-asset :rateDes="rateDes" :periodAsset="periodAsset" :pieData="pieData"/>
+      <table-container :rateDes="rateDes" :tableData="endPeriodPositionDetail" :table-column="detailTableColumn" :title="'期末持仓明细'"/>
+      <asset-increase :assetCurve="assetCurve"/>
+      <table-container :rateDes="rateDes" :tableData="periodIncome" :table-column="periodIncomeColumn" :title="'区间盈亏明细'" :show-summary="true"/>
+      <table-container :rateDes="rateDes" :tableData="hisIncome" :table-column="hisIncomeColumn" :title="'历史退出产品回报明细'" :show-summary="true"/>
+      <table-container :rateDes="rateDes" :tableData="dealRecord" :table-column="dealRecordColumn" :title="'期间交易记录'"/>
+    </div>
+  </layout> -->
           </div>
         </layout>
       </div>

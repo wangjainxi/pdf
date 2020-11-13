@@ -1,8 +1,8 @@
 <template>
   <div class="table-container asset-increase">
     <div class="data-title">
-      <img src="../../../assets/images/pdf-title-icon.png" alt=""/>
-      {{'资产增长图'}}
+      <img src="../../../assets/images/pdf-title-icon.png" alt="" />
+      {{ "资产增长图" }}
     </div>
     <div class="asset-increase-chart" id="line"></div>
   </div>
@@ -14,22 +14,28 @@ import echarts from "echarts";
 export default {
   name: "assetIncrease",
   props: {
-    assetCurve: Object
+    dataObj: {
+      type: Object,
+      default: () => {
+        return {
+          assetCurve: {},
+        };
+      },
+    },
   },
-  data () {
+  data() {
     return {
-      line: null
-    }
+      line: null,
+    };
   },
   mounted() {
-    setTimeout(()=> {
-      this.line = echarts.init(document.getElementById('line'))
-      this.line.setOption(this.assetCurve)
-    }, 100)
-  }
-}
+    setTimeout(() => {
+      this.line = echarts.init(document.getElementById("line"));
+      this.line.setOption(this.dataObj.assetCurve);
+    }, 100);
+  },
+};
 </script>
 
 <style scoped>
-
 </style>

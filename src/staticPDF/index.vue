@@ -1,6 +1,10 @@
 <template>
   <section class="pdf-box">
-    <div id="homeDom" class="pdf-box-bg" :class="{'isIphoneX-box': isPhoneX()}">
+    <div
+      id="homeDom"
+      class="pdf-box-bg"
+      :class="{ 'isIphoneX-box': isPhoneX() }"
+    >
       <home-page id="homePage"></home-page>
       <preface-page id="prefacePage"></preface-page>
       <risk-warning id="riskWarningPage"></risk-warning>
@@ -17,6 +21,7 @@
         :comsData="comsData"
         id="contentPageOne"
       ></content-page-one> -->
+      <ContentPageOne :comsData="comsData" />
       <end-page id="endPage"></end-page>
     </div>
   </section>
@@ -31,106 +36,129 @@ import DirectoryPage from "./coms/directoryPage";
 import EndPage from "./coms/endPage";
 import RiskWarning from "./coms/riskWarningPage";
 import ContentPageOne from "./coms/contentPageOne";
-import {calcLayoutModule, calcHeight} from './coms/calcLayout'
-import {detailTableColumn, periodIncomeColumn, hisIncomeColumn, dealRecordColumn} from './coms/data'
+import { calcLayoutModule, calcHeight } from "./coms/calcLayout";
+import {
+  detailTableColumn,
+  periodIncomeColumn,
+  hisIncomeColumn,
+  dealRecordColumn,
+  periodAssetColumn
+} from "./coms/data";
 // import {periodPopDetailData, periodIncomeData, hisIncomeData, dealRecordData} from './mockData'
-import {periodPopDetail, periodIncome, hisIncome, dealRecord ,pieOption} from './mockData'
+import {
+  periodPopDetail,
+  periodIncome,
+  hisIncome,
+  dealRecord,
+  pieOption,
+} from "./mockData";
 export default {
-  head () {
+  head() {
     return {
-      title: "PDF"
-    }
+      title: "PDF",
+    };
   },
-  data () {
-
-   const  rateDes = "注：持仓比例中美元资产已兑换人民币计算，汇率为："
-    const list = []
-      new Array(20).forEach(item => {
-        list.push([item['enddate'], item['amount'], item['en_netinput']])
-      })
-   const lineOption = {
-        color:['#187FC3','#CF121B'],
-        backgroundColor:'#FFFFFF',
-        legend: {
-          data: ['账户市值', '净值资额']
+  data() {
+    const rateDes = "注：持仓比例中美元资产已兑换人民币计算，汇率为：";
+    const list = [];
+    new Array(20).forEach((item) => {
+      list.push([item["enddate"], item["amount"], item["en_netinput"]]);
+    });
+    const lineOption = {
+      color: ["#187FC3", "#CF121B"],
+      backgroundColor: "#FFFFFF",
+      legend: {
+        data: ["账户市值", "净值资额"],
+      },
+      grid: {
+        left: "3%",
+        right: "4%",
+        bottom: "3%",
+        containLabel: true,
+      },
+      dataset: {
+        source: [["enddate", "amount", "en_netinput"], ...list],
+      },
+      xAxis: {
+        type: "category",
+        boundaryGap: false,
+      },
+      yAxis: {},
+      series: [
+        {
+          name: "账户市值",
+          type: "line",
+          encode: { x: "enddate", y: "amount" },
+          tooltip: [1],
+          areaStyle: {},
+          smooth: true,
         },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
+        {
+          name: "净值资额",
+          type: "line",
+          encode: { x: "enddate", y: "en_netinput" },
+          tooltip: [1],
+          areaStyle: {},
+          smooth: true,
         },
-        dataset: {
-          source: [
-            ['enddate','amount', 'en_netinput'],
-            ...list
-          ]
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-        },
-        yAxis: {},
-        series: [
-          {
-            name:'账户市值',
-            type: 'line',
-            encode: {x: 'enddate',y: 'amount'},
-            tooltip:[1],
-            areaStyle: {},
-            smooth: true
-          },
-          {
-            name:'净值资额',
-            type: 'line',
-            encode: {x: 'enddate',y: 'en_netinput'},
-            tooltip:[1],
-            areaStyle:  {},
-            smooth: true
-          }
-        ]
-      }
+      ],
+    };
     return {
       comsData: [],
-      loading: '',
+      loading: "",
       isPhoneX: isPhoneX, // 判断是否是iphonex等机型,
       directoryList: [
-        {name: '期末资产'},
-        {name: '期末持仓明细'},
-        {name: '资产增长图'},
-        {name: '区间盈亏明细'},
-        {name: '历史退出产品回报明细'},
-        {name: '期间交易记录'}
+        { name: "期末资产" },
+        { name: "期末持仓明细" },
+        { name: "资产增长图" },
+        { name: "区间盈亏明细" },
+        { name: "历史退出产品回报明细" },
+        { name: "期间交易记录" },
       ],
-       moduleA: {
+      moduleA: {
         rateDes: "注：持仓比例中美元资产已兑换人民币计算，汇率为：",
-        pieOption,
-        periodAsset: []
+        pieData:pieOption,
+        periodAsset: [
+          {
+            aAssetType: 6027.19,
+            allAsset: 58503.350000000006,
+            enNav: 47448.98,
+            stockType: 5027.18,
+          },
+          {
+            aAssetType: "10.30%",
+            allAsset: "100%",
+            enNav: "81.10%",
+            stockType: "8.59%",
+          },
+        ],
+        tbColumn:periodAssetColumn
       },
       moduleB: {
         rateDes,
-        endPeriodPositionDetail: periodPopDetail,
-        tbData:periodPopDetail
+        tbData: periodPopDetail,
+        tbColumn:detailTableColumn,
+        title: "期末持仓"
       },
       moduleC: {
-        assetCurve: lineOption
+        assetCurve: lineOption,
       },
       moduleD: {
         rateDes,
         periodIncome,
-        tbData:periodIncome
+        tbData: periodIncome,
       },
       moduleE: {
         rateDes,
         hisIncome,
-        tbData:hisIncome
+        tbData: hisIncome,
       },
       moduleF: {
         rateDes,
         dealRecord,
-        tbData:dealRecord
+        tbData: dealRecord,
       },
-    }
+    };
   },
   components: {
     ContentPageOne,
@@ -138,113 +166,112 @@ export default {
     EndPage,
     PrefacePage,
     HomePage,
-    DirectoryPage
+    DirectoryPage,
   },
-  mixins: [ htmlToPDF ],
-
+  mixins: [htmlToPDF],
 
   mounted() {
-    this.onCalcLayout()
-    this.isLoading = true
+    this.onCalcLayout();
+    this.isLoading = true;
     setTimeout(() => {
       // this.getPdf('PDF导出', 'homeDom')
-    }, 1500)
+    }, 1500);
   },
   methods: {
-   async onCalcLayout(){
-      console.log("this.moduleB", this.moduleB)
-      console.log("this.moduleC", this.moduleC)
-      console.log("this.moduleD", this.moduleD)
-      console.log("this.moduleE", this.moduleE)
-      console.log("this.moduleF", this.moduleF)
-     const ret = await new Promise((resolve) =>{
-      const arr = [
-        // {
-        //   height: 711,
-        //   name: "TerminalAsset",
-        //   tbName: "module1",
-        //   title: "期末持仓",
-        //   type: 0, // 动态组件1 非动态组件0
-        //   dataObj: this.moduleA,
-        //   ...this.moduleA
-        // },
-        {
-          height: calcHeight(this.moduleB.endPeriodPositionDetail).height,
-          name: "TableContainer",
-          tbName: "module2",
-          title: "期末持仓明细",
-          pageSize: calcHeight(this.moduleB.endPeriodPositionDetail).pageSize,
-          type: 1,
-          dataObj: this.moduleB,
-          ...this.moduleB,
-          columnAttr: detailTableColumn
-        },
-        // {
-        //   height: 745,
-        //   tbName: "module3",
-        //   title: "资产增长图",
-        //   name: "AssetIncrease",
-        //   type: 0,
-        //   dataObj:  this.moduleC,
-        //   ...this.moduleC
-        // },
-        {
-          height: calcHeight(this.moduleD.periodIncome).height,
-          name: "TableContainer",
-          tbName: "module4",
-          title: "区间盈亏明细",
-          pageSize: calcHeight(this.moduleD.periodIncome).pageSize,
-          type: 1,
-          dataObj: this.moduleD,
-          ...this.moduleD,
-          columnAttr: periodIncomeColumn
-        },
-        {
-          height: calcHeight(this.moduleE.hisIncome).height,
-          name: "TableContainer",
-          tbName: "module5",
-          title: "历史退出产品回报明细",
-          pageSize: calcHeight(this.moduleE.hisIncome).pageSize,
-          type: 1,
-          data: this.moduleE,
-          ...this.moduleE,
-          columnAttr: hisIncomeColumn
-        },
-        {
-          height: calcHeight(this.moduleF.dealRecord).height,
-          name: "TableContainer",
-          tbName: "module6",
-          title: "期间交易记录",
-          pageSize: calcHeight(this.moduleF.dealRecord).pageSize,
-          type: 1,
-          data: this.moduleF,
-          ...this.moduleF,
-          columnAttr: dealRecordColumn
-        },
-      ];
-      const calcRet = calcLayoutModule(arr)
-      console.log("calcRet", calcRet)
-      resolve(calcRet)
-      })
-      console.log("ret---", ret)
-      this.comsData = ret
+    async onCalcLayout() {
+      console.log("this.moduleB", this.moduleB);
+      console.log("this.moduleC", this.moduleC);
+      console.log("this.moduleD", this.moduleD);
+      console.log("this.moduleE", this.moduleE);
+      console.log("this.moduleF", this.moduleF);
+      const ret = await new Promise((resolve) => {
+        const arr = [
+          {
+            height: 711,
+            name: "TerminalAsset",
+            tbName: "module1",
+            title: "期末持仓",
+            type: 0, // 动态组件1 非动态组件0
+            dataObj: this.moduleA,
+            ...this.moduleA,
+          },
+          {
+            height: calcHeight(this.moduleB.endPeriodPositionDetail).height,
+            name: "TableContainer",
+            tbName: "module2",
+            title: "期末持仓明细",
+            pageSize: calcHeight(this.moduleB.endPeriodPositionDetail).pageSize,
+            type: 1,
+            dataObj: this.moduleB,
+            ...this.moduleB,
+            columnAttr: detailTableColumn,
+          },
+          {
+            height: 745,
+            tbName: "module3",
+            title: "资产增长图",
+            name: "AssetIncrease",
+            type: 0,
+            dataObj: this.moduleC,
+            ...this.moduleC,
+          },
+          {
+            height: calcHeight(this.moduleD.periodIncome).height,
+            name: "TableContainer",
+            tbName: "module4",
+            title: "区间盈亏明细",
+            pageSize: calcHeight(this.moduleD.periodIncome).pageSize,
+            type: 1,
+            dataObj: this.moduleD,
+            ...this.moduleD,
+            columnAttr: periodIncomeColumn,
+          },
+          {
+            height: calcHeight(this.moduleE.hisIncome).height,
+            name: "TableContainer",
+            tbName: "module5",
+            title: "历史退出产品回报明细",
+            pageSize: calcHeight(this.moduleE.hisIncome).pageSize,
+            type: 1,
+            data: this.moduleE,
+            ...this.moduleE,
+            columnAttr: hisIncomeColumn,
+          },
+          {
+            height: calcHeight(this.moduleF.dealRecord).height,
+            name: "TableContainer",
+            tbName: "module6",
+            title: "期间交易记录",
+            pageSize: calcHeight(this.moduleF.dealRecord).pageSize,
+            type: 1,
+            data: this.moduleF,
+            ...this.moduleF,
+            columnAttr: dealRecordColumn,
+          },
+        ];
+        const calcRet = calcLayoutModule(arr);
+        console.log("calcRet", calcRet);
+        resolve(calcRet);
+      });
+      console.log("ret---", ret);
+      this.comsData = ret;
     },
     timeFormatYMD(value) {
       //20201102
       if (!value) {
         return "--";
       }
-      const year = value.slice(0, 4)
-      const month = value.slice(4, 6)
-      const day = value.slice(6, value.length + 1)
+      const year = value.slice(0, 4);
+      const month = value.slice(4, 6);
+      const day = value.slice(6, value.length + 1);
       return `${year}.${month}.${day}`;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="less">
-  .van-overlay {
-    background-color: #000000;
-  }
+.van-overlay {
+  background-color: #000000;
+}
 </style>

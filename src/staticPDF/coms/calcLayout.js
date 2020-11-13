@@ -1,6 +1,5 @@
 export const calcLayoutModule = (arr) => {
-
-  console.log("arr2", arr)
+	console.log('arr2', arr);
 	var pageHeight = 3025;
 	var page = 1;
 	var addPageHeight = 0;
@@ -64,7 +63,8 @@ export const calcLayoutModule = (arr) => {
 				endIndex: null,
 				calcPage: null,
 				addPageHeight: null,
-				isAdd: false
+				isAdd: false,
+				name: item.name
 			};
 			if (needPageSize > 1) {
 				// 第一页剩余填补
@@ -124,9 +124,9 @@ export const calcLayoutModule = (arr) => {
 		return temp;
 	}
 
-	const calcRetArr = arr.map((item, index) => {
-    let addInfoArr = [];
-    let isAdd = false
+	const calcArrStep1 = arr.map((item, index) => {
+		let addInfoArr = [];
+		let isAdd = false;
 		if (arr[index]) {
 			if (addPageHeight + arr[index].height > pageHeight) {
 				if (arr[index].type) {
@@ -161,31 +161,30 @@ export const calcLayoutModule = (arr) => {
 		return item;
 	});
 
-	console.log('calcRetArr', calcRetArr);
-	const calcTempArr = calcRetArr.reduce((prev, curr, index, calcRetArr) => {
-		console.log('prev', prev);
-		if (curr.addInfoArr.length > 0) {
-			prev = prev.concat(curr.addInfoArr);
+	const calcArrStep3 = [];
+	calcArrStep1.forEach((m) => {
+		if (m.addInfoArr.length > 0) {
+			calcArrStep3.push(...m.addInfoArr);
 		} else {
-			prev.push(curr);
+			calcArrStep3.push(m);
 		}
-		return prev;
-	}, []);
-  console.log('calcTempArr', calcTempArr);
+	});
+	console.log('calcArrStep3', calcArrStep3);
+	const calcArrStep4 = calcArrStep3.map((m) => {
+		if (m.calcPage) {
+			m.page = m.calcPage;
+		}
+		return m;
+	});
+	console.log('calcArrStep4', calcArrStep4);
 
-	const transRes = [];
-	let temp = [];
-	calcTempArr.forEach((module, index) => {
-		console.log('module', module);
-		if (module.isAdd) {
-			temp.push(module);
-			transRes.push(temp);
-			temp = [];
-		} else {
-			temp.push(module);
-		}
-  });
-  transRes.push(temp)
+	let map = new Map();
+	let transRes = [];
+	calcArrStep4.forEach((item) => {
+		map.has(item.page) ? map.get(item.page).push(item) : map.set(item.page, [ item ]);
+	});
+	transRes = [ ...map.values() ];
+
 	console.log('transRes', transRes);
 	return transRes;
 };
