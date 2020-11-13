@@ -78,7 +78,7 @@ export default {
           // }
           return item[column.property]
         });
-        console.log(values)
+        // console.log(values)
         if (values.every(value => typeof value === "number")) {
           sums[index] = values.reduce((prev, curr) => {
             const value = Number(curr);
