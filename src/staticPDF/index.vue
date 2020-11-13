@@ -31,9 +31,10 @@ import DirectoryPage from "./coms/directoryPage";
 import EndPage from "./coms/endPage";
 import RiskWarning from "./coms/riskWarningPage";
 import ContentPageOne from "./coms/contentPageOne";
-import {calcLayoutModule, calcHeight, createRandomHeight} from './coms/calcLayout'
+import {calcLayoutModule, calcHeight} from './coms/calcLayout'
 import {detailTableColumn, periodIncomeColumn, hisIncomeColumn, dealRecordColumn} from './coms/data'
-// import {periodPopDetailData, periodIncomeData, hisIncomeData, dealRecordData} from './coms/mockData'
+// import {periodPopDetailData, periodIncomeData, hisIncomeData, dealRecordData} from './mockData'
+import {periodPopDetail, periodIncome, hisIncome, dealRecord ,pieOption} from './mockData'
 export default {
   head () {
     return {
@@ -41,6 +42,54 @@ export default {
     }
   },
   data () {
+
+   const  rateDes = "注：持仓比例中美元资产已兑换人民币计算，汇率为："
+    const list = []
+      new Array(20).forEach(item => {
+        list.push([item['enddate'], item['amount'], item['en_netinput']])
+      })
+   const lineOption = {
+        color:['#187FC3','#CF121B'],
+        backgroundColor:'#FFFFFF',
+        legend: {
+          data: ['账户市值', '净值资额']
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        dataset: {
+          source: [
+            ['enddate','amount', 'en_netinput'],
+            ...list
+          ]
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+        },
+        yAxis: {},
+        series: [
+          {
+            name:'账户市值',
+            type: 'line',
+            encode: {x: 'enddate',y: 'amount'},
+            tooltip:[1],
+            areaStyle: {},
+            smooth: true
+          },
+          {
+            name:'净值资额',
+            type: 'line',
+            encode: {x: 'enddate',y: 'en_netinput'},
+            tooltip:[1],
+            areaStyle:  {},
+            smooth: true
+          }
+        ]
+      }
     return {
       comsData: [],
       loading: '',
@@ -52,7 +101,35 @@ export default {
         {name: '区间盈亏明细'},
         {name: '历史退出产品回报明细'},
         {name: '期间交易记录'}
-      ]
+      ],
+       moduleA: {
+        rateDes: "注：持仓比例中美元资产已兑换人民币计算，汇率为：",
+        pieOption,
+        periodAsset: []
+      },
+      moduleB: {
+        rateDes,
+        endPeriodPositionDetail: periodPopDetail,
+        tbData:periodPopDetail
+      },
+      moduleC: {
+        assetCurve: lineOption
+      },
+      moduleD: {
+        rateDes,
+        periodIncome,
+        tbData:periodIncome
+      },
+      moduleE: {
+        rateDes,
+        hisIncome,
+        tbData:hisIncome
+      },
+      moduleF: {
+        rateDes,
+        dealRecord,
+        tbData:dealRecord
+      },
     }
   },
   components: {
