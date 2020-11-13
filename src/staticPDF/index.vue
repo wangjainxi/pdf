@@ -42,7 +42,7 @@ import {
   periodIncomeColumn,
   hisIncomeColumn,
   dealRecordColumn,
-  periodAssetColumn
+  periodAssetColumn,
 } from "./coms/data";
 // import {periodPopDetailData, periodIncomeData, hisIncomeData, dealRecordData} from './mockData'
 import {
@@ -117,7 +117,7 @@ export default {
       ],
       moduleA: {
         rateDes: "注：持仓比例中美元资产已兑换人民币计算，汇率为：",
-        pieData:pieOption,
+        pieData: pieOption,
         periodAsset: [
           {
             aAssetType: 6027.19,
@@ -132,13 +132,13 @@ export default {
             stockType: "8.59%",
           },
         ],
-        tbColumn:periodAssetColumn
+        tbColumn: periodAssetColumn,
       },
       moduleB: {
         rateDes,
         tbData: periodPopDetail,
-        tbColumn:detailTableColumn,
-        title: "期末持仓"
+        tbColumn: detailTableColumn,
+        title: "期末持仓",
       },
       moduleC: {
         assetCurve: lineOption,
@@ -147,16 +147,22 @@ export default {
         rateDes,
         periodIncome,
         tbData: periodIncome,
+        title: "区间盈亏明细",
+         tbColumn: periodIncomeColumn,
       },
       moduleE: {
         rateDes,
         hisIncome,
         tbData: hisIncome,
+        title: "历史退出产品回报明细",
+        tbColumn: hisIncomeColumn,
       },
       moduleF: {
         rateDes,
         dealRecord,
         tbData: dealRecord,
+        title: "期间交易记录",
+        tbColumn: dealRecordColumn,
       },
     };
   },
@@ -233,7 +239,7 @@ export default {
             title: "历史退出产品回报明细",
             pageSize: calcHeight(this.moduleE.hisIncome).pageSize,
             type: 1,
-            data: this.moduleE,
+            dataObj: this.moduleE,
             ...this.moduleE,
             columnAttr: hisIncomeColumn,
           },
@@ -244,7 +250,7 @@ export default {
             title: "期间交易记录",
             pageSize: calcHeight(this.moduleF.dealRecord).pageSize,
             type: 1,
-            data: this.moduleF,
+            dataObj: this.moduleF,
             ...this.moduleF,
             columnAttr: dealRecordColumn,
           },

@@ -1,18 +1,18 @@
 <template>
   <div>
     <div v-for="(layoutItem, index) in comsData" :key="'layout'+index">
-      <div v-if="layoutItem.length > 0">
+      <!-- <div v-if="layoutItem.length > 0"> -->
         <layout :headerType="'paddingShort'">
           <div v-for="(moduleItem, idx) in layoutItem" :key="idx.name" >
             <div class="content-page-container">
               {{moduleItem.name}}
-              <div v-if="idx < 3">
+              <!-- <div v-if="idx ===  4"> -->
               <component :is="moduleItem.name" v-bind="$attrs" v-if="moduleItem.dataObj" :dataObj="moduleItem.dataObj"/>
-              </div>
+              <!-- </div> -->
             </div>
           </div>
         </layout>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>
