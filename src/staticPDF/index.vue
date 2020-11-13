@@ -217,51 +217,51 @@ export default {
             columnAttr: detailTableColumn,
             isNewTable: true
           },
-          // {
-          //   height: 745,
-          //   tbName: "module3",
-          //   title: "资产增长图",
-          //   name: "AssetIncrease",
-          //   type: 0,
-          //   dataObj: this.moduleC,
-          //   ...this.moduleC,
-          // },
-          // {
-          //   height: calcHeight(this.moduleD.tbData).height,
-          //   name: "TableContainer",
-          //   tbName: "module4",
-          //   title: "区间盈亏明细",
-          //   pageSize: calcHeight(this.moduleD.tbData).pageSize,
-          //   type: 1,
-          //   dataObj: this.moduleD,
-          //   ...this.moduleD,
-          //   columnAttr: periodIncomeColumn,
-          //   isNewTable: true
-          // },
-          // {
-          //   height: calcHeight(this.moduleE.tbData).height,
-          //   name: "TableContainer",
-          //   tbName: "module5",
-          //   title: "历史退出产品回报明细",
-          //   pageSize: calcHeight(this.moduleE.tbData).pageSize,
-          //   type: 1,
-          //   dataObj: this.moduleE,
-          //   ...this.moduleE,
-          //   columnAttr: hisIncomeColumn,
-          //   isNewTable: true
-          // },
-          // {
-          //   height: calcHeight(this.moduleF.tbData).height,
-          //   name: "TableContainer",
-          //   tbName: "module6",
-          //   title: "期间交易记录",
-          //   pageSize: calcHeight(this.moduleF.tbData).pageSize,
-          //   type: 1,
-          //   dataObj: this.moduleF,
-          //   ...this.moduleF,
-          //   columnAttr: dealRecordColumn,
-          //   isNewTable: true
-          // },
+          {
+            height: 745,
+            tbName: "module3",
+            title: "资产增长图",
+            name: "AssetIncrease",
+            type: 0,
+            dataObj: this.moduleC,
+            ...this.moduleC,
+          },
+          {
+            height: calcHeight(this.moduleD.tbData).height,
+            name: "TableContainer",
+            tbName: "module4",
+            title: "区间盈亏明细",
+            pageSize: calcHeight(this.moduleD.tbData).pageSize,
+            type: 1,
+            dataObj: this.moduleD,
+            ...this.moduleD,
+            columnAttr: periodIncomeColumn,
+            isNewTable: true
+          },
+          {
+            height: calcHeight(this.moduleE.tbData).height,
+            name: "TableContainer",
+            tbName: "module5",
+            title: "历史退出产品回报明细",
+            pageSize: calcHeight(this.moduleE.tbData).pageSize,
+            type: 1,
+            dataObj: this.moduleE,
+            ...this.moduleE,
+            columnAttr: hisIncomeColumn,
+            isNewTable: true
+          },
+          {
+            height: calcHeight(this.moduleF.tbData).height,
+            name: "TableContainer",
+            tbName: "module6",
+            title: "期间交易记录",
+            pageSize: calcHeight(this.moduleF.tbData).pageSize,
+            type: 1,
+            dataObj: this.moduleF,
+            ...this.moduleF,
+            columnAttr: dealRecordColumn,
+            isNewTable: true
+          },
         ];
         const calcRet = calcLayoutModule(arr);
         // console.log("calcRet", calcRet);

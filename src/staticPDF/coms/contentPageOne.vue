@@ -21,6 +21,7 @@ import layout from "./layout";
 import PdfTable from "./pdf-table";
 import TerminalAsset from "./contentComs/terminalAsset";
 import TableContainer from "./contentComs/tableContainer";
+import addTableContainer from "./contentComs/addTableContainer";
 import AssetIncrease from "./contentComs/assetIncrease";
 export default {
   name: "contentPage",
@@ -30,6 +31,7 @@ export default {
     TerminalAsset,
     PdfTable,
     layout,
+    addTableContainer
   },
   props: {
     comsData: Array,

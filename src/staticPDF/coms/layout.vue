@@ -34,8 +34,9 @@ export default {
   display: flex;
   flex-direction: column;
   width: 2480px;
-  height: 3525px;
+  height: 3521px;
  background: #eee;
+ border: 1px solid red;
   .pdf-header {
     height: 400px;
     width: 100%;

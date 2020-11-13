@@ -4,10 +4,10 @@ const tbHeaderOffsetTop = 401;
 const rowItemHeight = 110;
 const headerHeight = 100;
 const bomTableHeight = 110;
-const pageHeight = 3025;
+const pageHeight = 3015;
 const maxSize = 25; // 26.5
 const mtMaxSize = 21; // 22.9
-
+import {cloneDeep} from 'lodash'
 export const calcLayoutModule = (arr) => {
 	console.log('arr2', arr);
 	var page = 1;
@@ -21,7 +21,7 @@ export const calcLayoutModule = (arr) => {
 		// 当前页剩余还能放多少条,需要根据是不是新table， 是 501 ，不是
 		const curPageleftSize = canAddSize({ addPageHeight, item });
 		console.log('curPageleftSize', curPageleftSize)
-		if(curPageleftSize > 1) {
+		// if(curPageleftSize > 1) {
 		// 需要多少页
 		const needPageSize = Math.ceil((item.pageSize - curPageleftSize) / calcMaxSize(item));
 
@@ -55,16 +55,16 @@ export const calcLayoutModule = (arr) => {
 			reAddPageHeight: calcAddInfoArr[calcAddInfoArr.length - 1].addPageHeight
 		};
 
-	} else {
-		page = page + 1
-		const v = {
-			calcPage:page,
-			reAddPageHeight: calcAddPageHeight(item),
-			calcAddInfoArr: []
-		}
-		console.log('vvv',v)
-		return v
-	}
+	// } else {
+	// 	page = page + 1
+	// 	const v = {
+	// 		calcPage:page,
+	// 		reAddPageHeight: calcAddPageHeight(item),
+	// 		calcAddInfoArr: []
+	// 	}
+	// 	console.log('vvv',v)
+	// 	return v
+	// }
 	}
 
 	function calcAddPageInfo({ needPageSize, curPageleftSize, lastPageLeftSize, item, page, addPageHeight }) {
@@ -80,7 +80,7 @@ export const calcLayoutModule = (arr) => {
 				addPageHeight: null,
 				isAdd: false,
 				name: item.name,
-
+				dataObj: cloneDeep(item.dataObj)
 			};
 			if (needPageSize > 1) {
 				// 第一页剩余填补
@@ -90,6 +90,9 @@ export const calcLayoutModule = (arr) => {
 					dynamicPageItem.calcPage = calcPage;
 					dynamicPageItem.addPageHeight = addPageHeight + curPageleftSize * rowItemHeight;
 					dynamicPageItem.isAdd = false;
+					dynamicPageItem.type = 1;
+					dynamicPageItem.name = 'TableContainer';
+					dynamicPageItem.dataObj.showSummary = false
 				} else if (i > 0 && i < needPageSize) {
 					// 除了剩余的第一页和增加的最后一页
 					dynamicPageItem.beganIndex = curPageleftSize + maxSize * (i - 1);
@@ -98,6 +101,9 @@ export const calcLayoutModule = (arr) => {
 					console.log('calcPage2222', calcPage);
 					dynamicPageItem.addPageHeight = lastPageLeftSize * rowItemHeight + headerHeight;
 					dynamicPageItem.isAdd = true;
+					dynamicPageItem.type = 1;
+					dynamicPageItem.name = 'addTableContainer';
+					dynamicPageItem.dataObj.showSummary = false
 					console.log('log1');
 				} else {
 					// 返回增加的最后一页的 第一行的索引 和 最后一行的索引
@@ -109,6 +115,9 @@ export const calcLayoutModule = (arr) => {
 					console.log('calcPage333', calcPage);
 					dynamicPageItem.addPageHeight = lastPageLeftSize * rowItemHeight + headerHeight;
 					dynamicPageItem.isAdd = true;
+					dynamicPageItem.type = 1;
+					dynamicPageItem.name = 'addTableContainer';
+					dynamicPageItem.dataObj.showSummary = true
 					console.log('log2');
 				}
 				temp.push(dynamicPageItem);
@@ -122,6 +131,9 @@ export const calcLayoutModule = (arr) => {
 					dynamicPageItem.calcPage = calcPage;
 					dynamicPageItem.addPageHeight = addPageHeight + curPageleftSize * rowItemHeight;
 					dynamicPageItem.isAdd = false;
+					dynamicPageItem.type = 1;
+					dynamicPageItem.name = 'TableContainer';
+					dynamicPageItem.dataObj.showSummary = false
 				} else {
 					console.log('i === 1');
 					console.log('lastPageLeftSize', lastPageLeftSize);
@@ -130,6 +142,9 @@ export const calcLayoutModule = (arr) => {
 					dynamicPageItem.calcPage = ++calcPage;
 					dynamicPageItem.addPageHeight = lastPageLeftSize * rowItemHeight + headerHeight;
 					dynamicPageItem.isAdd = true;
+					dynamicPageItem.type = 1;
+					dynamicPageItem.name = 'addTableContainer';
+					dynamicPageItem.dataObj.showSummary = true
 				}
 
 				console.log('dynamicPageItem', dynamicPageItem);
@@ -146,20 +161,30 @@ export const calcLayoutModule = (arr) => {
 		if (arr[index]) {
 			if (addPageHeight + arr[index].height > pageHeight) {
 				if (arr[index].type) {
-					// 动态组件
-					const {
-						// curPageleftSize,
-						// needPageSize,
-						calcAddInfoArr,
-						// lastPageLeftSize,
-						cailcIsAdd,
-						reAddPageHeight,
-						calcPage
-					} = calcMaxAddSize(addPageHeight, arr[index].pageSize, item, page);
+					// 动态组件 不够放，判断能不能放下最小1条的带头的动态组件
+					if(addPageHeight + newTableMinHeight(item) < pageHeight){
+						const {
+							// curPageleftSize,
+							// needPageSize,
+							calcAddInfoArr,
+							// lastPageLeftSize,
+							cailcIsAdd,
+							reAddPageHeight,
+							calcPage
+						} = calcMaxAddSize(addPageHeight, arr[index].pageSize, item, page);
+							// 动态组件
 					page = calcPage;
 					console.log('page', page);
 					addPageHeight = reAddPageHeight;
 					addInfoArr = calcAddInfoArr;
+					}
+					else {
+					isAdd = true;
+					page++;
+					addPageHeight = arr[index].height;  // 只满足新加的table条数不大于一页
+					}
+
+
 				} else {
 					isAdd = true;
 					page++;
@@ -189,6 +214,10 @@ export const calcLayoutModule = (arr) => {
 	const calcArrStep4 = calcArrStep3.map((m) => {
 		if (m.calcPage) {
 			m.page = m.calcPage;
+			// mark
+		}
+		if(m.beganIndex && m.endIndex && m.dataObj && m.dataObj.tbData){
+			m.dataObj.tbData = sliceTbData({beganIndex: m.beganIndex, endIndex: m.endIndex,sliceData:m.dataObj.tbData})
 		}
 		return m;
 	});
@@ -244,7 +273,7 @@ export const createRandomHeight = (arr, num) => {
 };
 
 export const canAddSize = ({ addPageHeight, item }) => {
-	const n = newTableMinHeight(item);
+	const n = beganMinHeight(item);
 	console.log('n', n)
 	const m = Math.floor((pageHeight - addPageHeight - n) / rowItemHeight);
 	console.log('m', m);
@@ -259,11 +288,24 @@ export const newTableMinHeight = (item) => {
 	// 110 ?是否有合计
 	// 100 表头
 	// 110 至少一条数据
-	if (item.showSummary) {
+	if (item.showSummary) { //721
 		return 200 + 86 + 65 + 50 + 110 + 100 + 110;
-	} else {
+	} else { // 611
 		return 200 + 86 + 65 + 50 + 100 + 110;
 	}
+};
+
+// 计算剩余还能添加多少条用到的高度
+export const beganMinHeight = () => {
+	// 200 table container marginTop
+	// 86 title height
+	// 65 注释 height + marginTop
+	// 50 talbe marginTop
+	// 110 ?是否有合计
+	// 100 表头
+	// 110 至少一条数据
+
+	return 200 + 86 + 65 + 50 + 100
 };
 
 
@@ -273,4 +315,12 @@ export const  calcMaxSize = (item) =>{
 	}else{
 		return maxSize
 	}
+}
+
+export const sliceTbData =({beganIndex, endIndex, sliceData}) => {
+	const temp = cloneDeep(sliceData)
+	if(beganIndex === endIndex){
+		return temp.slice(beganIndex)
+	}
+	return temp.slice(beganIndex, endIndex)
 }

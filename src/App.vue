@@ -21,6 +21,13 @@ export default {
 </script>
 
 <style>
+.content-page-container .table-container .table-limit .el-table__body-wrapper table td,
+.el-table td, .el-table th {
+  padding: 0;
+}
+.content-page-container .table-container .table-limit .el-table__body-wrapper table tr{
+  border-spacing:0;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
