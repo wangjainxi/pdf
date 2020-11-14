@@ -206,11 +206,11 @@ export default {
             ...this.moduleA
           },
           {
-            height: calcHeight(this.moduleB.tbData).height,
+            height: calcHeight(this.moduleB).height,
             name: "TableContainer",
             tbName: "module2",
             title: "期末持仓明细",
-            pageSize: calcHeight(this.moduleB.tbData).pageSize,
+            pageSize: calcHeight(this.moduleB).pageSize,
             type: 1,
             dataObj: this.moduleB,
             ...this.moduleB,
@@ -227,11 +227,11 @@ export default {
             ...this.moduleC,
           },
           {
-            height: calcHeight(this.moduleD.tbData).height,
+            height: calcHeight(this.moduleD).height,
             name: "TableContainer",
             tbName: "module4",
             title: "区间盈亏明细",
-            pageSize: calcHeight(this.moduleD.tbData).pageSize,
+            pageSize: calcHeight(this.moduleD).pageSize,
             type: 1,
             dataObj: this.moduleD,
             ...this.moduleD,
@@ -239,11 +239,11 @@ export default {
             isNewTable: true
           },
           {
-            height: calcHeight(this.moduleE.tbData).height,
+            height: calcHeight(this.moduleE).height,
             name: "TableContainer",
             tbName: "module5",
             title: "历史退出产品回报明细",
-            pageSize: calcHeight(this.moduleE.tbData).pageSize,
+            pageSize: calcHeight(this.moduleE).pageSize,
             type: 1,
             dataObj: this.moduleE,
             ...this.moduleE,
@@ -251,11 +251,11 @@ export default {
             isNewTable: true
           },
           {
-            height: calcHeight(this.moduleF.tbData).height,
+            height: calcHeight(this.moduleF).height,
             name: "TableContainer",
             tbName: "module6",
             title: "期间交易记录",
-            pageSize: calcHeight(this.moduleF.tbData).pageSize,
+            pageSize: calcHeight(this.moduleF).pageSize,
             type: 1,
             dataObj: this.moduleF,
             ...this.moduleF,
