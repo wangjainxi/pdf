@@ -21,9 +21,7 @@ const sumerryHeight = 110;
 // 50 talbe marginTop
 // 110 ?是否有合计
 // 110 表头
-// const emptyAddTableHeight = 511; // 200 + 86 + 65 + 50 + 110
 import { cloneDeep } from 'lodash';
-// 是不是新的表格 两种情况需要计算 1. 当前页不够 添加的时候 2.新开了一页
 
 // 走新table分页逻辑
 export const calcNewTable = (addPageHeight, item, page) => {
@@ -203,52 +201,44 @@ export const calcAddPageInfo = ({ needPageSize, curPageleftSize, lastPageLeftSiz
 	return temp;
 };
 
-export const calcLayoutModule = (arr) => {
+export const calcMaxAddSize = (addPageHeight, size, item, page) => {
+	console.log('addPageHeight', addPageHeight);
+	console.log('size', size);
+
+	// 当前页剩余还能放多少条,需要根据是不是新table， 是 501 ，不是
+	const curPageleftSize = canAddSize({ addPageHeight, item });
+	console.log('curPageleftSize', curPageleftSize);
+	const needPageSize = Math.ceil((item.pageSize - curPageleftSize) / maxSize);
+
+	// 除了增加的页数以外   增加的最后一页还有剩余多少条
+	const lastPageLeftSize = item.pageSize - curPageleftSize - (needPageSize - 1) * maxSize;
+
+	const calcAddInfoArr = calcAddPageInfo({
+		needPageSize,
+		curPageleftSize,
+		lastPageLeftSize,
+		item,
+		page,
+		addPageHeight,
+		isNewTb: false
+	});
+	console.log('calcAddInfoArr', calcAddInfoArr);
+
+	return {
+		calcPage: calcAddInfoArr[calcAddInfoArr.length - 1].calcPage,
+		cailcIsAdd: calcAddInfoArr[calcAddInfoArr.length - 1].isAdd,
+		calcAddInfoArr,
+		curPageleftSize,
+		needPageSize,
+		lastPageLeftSize,
+		reAddPageHeight: calcAddInfoArr[calcAddInfoArr.length - 1].addPageHeight
+	};
+}
+
+export const calcPageSplit = (arr) => {
 	let page = 1;
 	let addPageHeight = 0;
-	// 除了表头、合计 每页最多能放26
-	// 200 86 65 50
-
-	function calcMaxAddSize(addPageHeight, size, item, page) {
-		console.log('addPageHeight', addPageHeight);
-		console.log('size', size);
-
-		// 当前页剩余还能放多少条,需要根据是不是新table， 是 501 ，不是
-		const curPageleftSize = canAddSize({ addPageHeight, item });
-		// if(item.tbName === 'module4'){
-		console.log('curPageleftSize module4', curPageleftSize);
-		// }
-		// if(curPageleftSize > 1) {
-		// 需要多加一个判断 是新加页的
-		// 需要多少页
-		const needPageSize = Math.ceil((item.pageSize - curPageleftSize) / maxSize);
-
-		// 除了增加的页数以外   增加的最后一页还有剩余多少条
-		const lastPageLeftSize = item.pageSize - curPageleftSize - (needPageSize - 1) * maxSize;
-
-		const calcAddInfoArr = calcAddPageInfo({
-			needPageSize,
-			curPageleftSize,
-			lastPageLeftSize,
-			item,
-			page,
-			addPageHeight,
-			isNewTb: false
-		});
-		console.log('calcAddInfoArr', calcAddInfoArr);
-
-		return {
-			calcPage: calcAddInfoArr[calcAddInfoArr.length - 1].calcPage,
-			cailcIsAdd: calcAddInfoArr[calcAddInfoArr.length - 1].isAdd,
-			calcAddInfoArr,
-			curPageleftSize,
-			needPageSize,
-			lastPageLeftSize,
-			reAddPageHeight: calcAddInfoArr[calcAddInfoArr.length - 1].addPageHeight
-		};
-	}
-
-	const calcArrStep1 = arr.map((item, index) => {
+	let temp  = arr.map((item, index) => {
 		let addInfoArr = [];
 		let isAdd = false;
 		let needPageSizeInit = 0;
@@ -300,8 +290,12 @@ export const calcLayoutModule = (arr) => {
 		item.addPageHeight = addPageHeight;
 		return item;
 	});
+	return temp
+}
 
-	console.log('calcArrStep1', calcArrStep1);
+export const calcLayoutModule = (moduleArr) => {
+	const  calcArrStep1 = calcPageSplit(moduleArr)
+	console.log('calcArrStep1', calcArrStep1)
 	const calcArrStep3 = [];
 	calcArrStep1.forEach((m) => {
 		if (m.addInfoArr.length > 0) {
@@ -314,7 +308,6 @@ export const calcLayoutModule = (arr) => {
 	const calcArrStep4 = calcArrStep3.map((m) => {
 		if (m.calcPage) {
 			m.page = m.calcPage;
-			// mark
 		}
 		if (
 			(m.beganIndex === 0 && m.endIndex && m.dataObj && m.dataObj.tbData) ||
@@ -336,7 +329,6 @@ export const calcLayoutModule = (arr) => {
 		map.has(item.page) ? map.get(item.page).push(item) : map.set(item.page, [ item ]);
 	});
 	transRes = [ ...map.values() ];
-
 	console.log('transRes', transRes);
 	return transRes;
 };
@@ -409,63 +401,21 @@ export const canAddSize = ({ addPageHeight, item }) => {
 };
 
 export const newTableMinHeight = () => {
-	// 200 table container marginTop
-	// 86 title height
-	// 65 注释 height + marginTop
-	// 50 talbe marginTop
-	// 110 ?是否有合计
-	// 110 表头
-	// 110 至少一条数据
-	// if (item.showSummary) {
-	// 	//721
-	// 	return 200 + 86 + 65 + 50 + 110 + 110 + 110 ;
-	// } else {
-	// 611
 	return 200 + 86 + 65 + 50 + 110 + 110;
-	// }
 };
 
 // 计算n 条数据单独新的 只有一页 动态table的高度（n < 21）
 export const minSizeHeight = (num) => {
-	// 200 table container marginTop
-	// 86 title height
-	// 65 注释 height + marginTop
-	// 50 talbe marginTop
-	// 110 ?是否有合计
-	// 110 表头
-	// 110 至少一条数据
-	// if (item.showSummary) {
-	// 	//721
-	// 	return 200 + 86 + 65 + 50 + 110 + 110 + 110 ;
-	// } else {
-	// 611
 	return 200 + 86 + 65 + 50 + 110 + 110 + 110 * num;
-	// }
 };
 
 // mark 合计
 export const unBeganMinHeight = () => {
-	// 200 table container marginTop
-	// 86 title height
-	// 65 注释 height + marginTop
-	// 50 talbe marginTop
-	// 110 ?是否有合计
-	// 100 表头
-	// 110 至少一条数据
-
 	return 110 + 110;
 };
 
 // 计算剩余还能添加多少条用到的高度
 export const beganMinHeight = () => {
-	// 200 table container marginTop
-	// 86 title height
-	// 65 注释 height + marginTop
-	// 50 talbe marginTop
-	// 110 ?是否有合计
-	// 100 表头
-	// 110 至少一条数据
-
 	return 200 + 86 + 65 + 50 + 110 + 110;
 };
 
