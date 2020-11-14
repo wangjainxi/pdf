@@ -51,7 +51,9 @@ import {
   hisIncome,
   dealRecord,
   pieOption,
+  // } from "./ramdomData";
 } from "./mockData";
+
 export default {
   head() {
     return {
@@ -185,7 +187,8 @@ export default {
     this.isLoading = true;
     setTimeout(() => {
       // this.getPdf('PDF导出', 'homeDom')
-    }, 1500);
+      // window.location.reload()
+    }, 12000);
   },
   methods: {
     async onCalcLayout() {

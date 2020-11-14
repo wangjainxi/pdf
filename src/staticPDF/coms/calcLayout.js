@@ -15,7 +15,7 @@ const tipHeight_add_MarginTop = 65;
 const table_marginTop = 50;
 const sumerryHeight = 110;
 
-const warnHeight = 400
+const warnHeight = 200
 
 // const ramDomNum = 200
 // 200 table container marginTop
@@ -26,6 +26,7 @@ const warnHeight = 400
 // 110 表头
 import { cloneDeep } from 'lodash';
 export const calcLayoutModule = (moduleArr) => {
+	console.log('moduleArr--------------------------moduleArr--',moduleArr)
 
 	// 走新table分页逻辑
 	function calcNewTable(splitItem, calcPageNum) {
@@ -50,7 +51,7 @@ export const calcLayoutModule = (moduleArr) => {
 			dynamicNewTbItem.calcPage = ++calcPage;
 			dynamicNewTbItem.isAdd = true;
 			dynamicNewTbItem.name = cloneNewItem.name;
-			dynamicNewTbItem.addPageHeight = minSizeHeight(cloneNewItem.size);
+			dynamicNewTbItem.addPageHeight = minSizeHeight(cloneNewItem.pageSize);
 			dynamicNewTbItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 			tempTbArr.push(dynamicNewTbItem);
 		} else {
@@ -86,7 +87,7 @@ export const calcLayoutModule = (moduleArr) => {
 						dynamicNewTbItem.addPageHeight = pageHeight; // 无所谓
 						dynamicNewTbItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 					} else {
-						const lastPageLeftSize = cloneNewItem.pageSize - mtMaxSize - (numTFlag - 1) * maxSize;
+						const lastPageLeftSize = cloneNewItem.pageSize - mtMaxSize - (numTFlag - 1) * maxSize ;
 						dynamicNewTbItem.beganIndex = cloneNewItem.pageSize - lastPageLeftSize;
 						dynamicNewTbItem.endIndex = cloneNewItem.pageSize - 1;
 						dynamicNewTbItem.calcPage = ++calcPage;
@@ -171,7 +172,7 @@ export const calcLayoutModule = (moduleArr) => {
 				// 第一页剩余填补
 				if (i == 0) {
 					dynamicAddPageItem.beganIndex = 0;
-					dynamicAddPageItem.endIndex = curPageleftSize - 1;
+					dynamicAddPageItem.endIndex = curPageleftSize;
 					dynamicAddPageItem.calcPage = calcPage;
 					dynamicAddPageItem.addPageHeight = addPageHeight + curPageleftSize * rowItemHeight;
 					dynamicAddPageItem.isAdd = false;
@@ -194,7 +195,7 @@ export const calcLayoutModule = (moduleArr) => {
 					// 返回增加的最后一页的 第一行的索引 和 最后一行的索引
 					console.log('last add debug addPageDb3InfoItem', addPageDb3InfoItem);
 
-					dynamicAddPageItem.beganIndex = curPageleftSize + maxSize * (i - 1);
+					dynamicAddPageItem.beganIndex = curPageleftSize + maxSize * (i - 1) ;
 					dynamicAddPageItem.endIndex = addPageDb3InfoItem.pageSize - 1;
 					dynamicAddPageItem.calcPage = ++calcPage;
 					console.log('calcPage333', calcPage);
@@ -223,7 +224,7 @@ export const calcLayoutModule = (moduleArr) => {
 				} else {
 					console.log('i === 1');
 					console.log('lastPageLeftSize', lastPageLeftSize);
-					dynamicAddPageItem.beganIndex = curPageleftSize + maxSize * (i - 1);
+					dynamicAddPageItem.beganIndex = curPageleftSize + maxSize * (i - 1) -1;
 					dynamicAddPageItem.endIndex = addPageDb3InfoItem.pageSize - 1;
 					dynamicAddPageItem.calcPage = ++calcPage;
 					dynamicAddPageItem.addPageHeight = lastPageLeftSize * rowItemHeight + headerHeight;
@@ -287,11 +288,11 @@ export const calcLayoutModule = (moduleArr) => {
 			let needPageSizeInit = 0;
 			let curPageleftSizeInit = 0;
 			if (arr[index]) {
-				if (addPageHeight + arr[index].height  > pageHeight) {
+				if (addPageHeight + arr[index].height + warnHeight  > pageHeight) {
 					if (arr[index].type) {
 						console.log('arr[index].type');
 						console.log('chuan page', calcPageNum);
-						if (pageHeight - addPageHeight > minSizeHeight(10)) {
+						if (pageHeight - addPageHeight > minSizeHeight(15)) {
 							const {
 								curPageleftSize,
 								needPageSize,
@@ -338,7 +339,7 @@ export const calcLayoutModule = (moduleArr) => {
 			splitItem.isAdd = isAdd;
 			splitItem.addInfoArr = addInfoArr;
 			splitItem.page = calcPageNum;
-			splitItem.addPageHeight = addPageHeight;
+			// splitItem.addPageHeight = addPageHeight;
 			return splitItem;
 		});
 		return splitTemp;
@@ -494,11 +495,9 @@ export const calcMaxSize = (item) => {
 
 export const sliceTbData = ({ beganIndex, endIndex, sliceData, obj }) => {
 	console.log('{ beganIndex, endIndex, sliceData }', { beganIndex, endIndex, sliceData, obj })
-	// const temp = cloneDeep(sliceData);
 	if (beganIndex === endIndex) {
 		return sliceData.slice(beganIndex);
 	}
-
 	return sliceData.slice(beganIndex, endIndex );
 };
 
@@ -519,5 +518,6 @@ export const staticHeight_hasSummary = ({ item }) => {
 
 // 新table 最后一页的 addPageHeight
 export const newTableLeftPage_addPageHeight = ({ item, lastPageLeftSize }) => {
-	return staticHeight_hasSummary({ item }) + lastPageLeftSize * rowItemHeight;
+	const n = staticHeight_hasSummary({ item }) + lastPageLeftSize * rowItemHeight;
+	return n
 };
