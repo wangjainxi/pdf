@@ -203,7 +203,6 @@ export default {
             title: "期末持仓",
             type: 0, // 动态组件1 非动态组件0
             dataObj: this.moduleA,
-            ...this.moduleA
           },
           {
             height: calcHeight(this.moduleB).height,
@@ -213,7 +212,6 @@ export default {
             pageSize: calcHeight(this.moduleB).pageSize,
             type: 1,
             dataObj: this.moduleB,
-            ...this.moduleB,
             columnAttr: detailTableColumn,
             isNewTable: true
           },
@@ -224,7 +222,6 @@ export default {
             name: "AssetIncrease",
             type: 0,
             dataObj: this.moduleC,
-            ...this.moduleC,
           },
           {
             height: calcHeight(this.moduleD).height,
@@ -234,7 +231,6 @@ export default {
             pageSize: calcHeight(this.moduleD).pageSize,
             type: 1,
             dataObj: this.moduleD,
-            ...this.moduleD,
             columnAttr: periodIncomeColumn,
             isNewTable: true
           },
@@ -246,7 +242,6 @@ export default {
             pageSize: calcHeight(this.moduleE).pageSize,
             type: 1,
             dataObj: this.moduleE,
-            ...this.moduleE,
             columnAttr: hisIncomeColumn,
             isNewTable: true
           },
@@ -258,7 +253,6 @@ export default {
             pageSize: calcHeight(this.moduleF).pageSize,
             type: 1,
             dataObj: this.moduleF,
-            ...this.moduleF,
             columnAttr: dealRecordColumn,
             isNewTable: true
           },
