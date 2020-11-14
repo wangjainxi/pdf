@@ -24,9 +24,12 @@ const sumerryHeight = 110;
 import { cloneDeep } from 'lodash';
 
 // 走新table分页逻辑
-export const calcNewTable = (addPageHeight, item, page) => {
-	console.log('calcNewTable item', item);
-	let temp = [];
+export const calcNewTable = ( newTableItemParam, page) => {
+	const cloneNewItem = cloneDeep(newTableItemParam)
+	let calcPage = cloneDeep(page)
+	console.log('calcNewTable11 item', cloneNewItem);
+	console.log('calcNewTable11 page', page);
+	let tempTbArr = [];
 	let dynamicPageItem = {
 		beganIndex: 0,
 		endIndex: 0,
@@ -36,84 +39,85 @@ export const calcNewTable = (addPageHeight, item, page) => {
 		name: '',
 		dataObj: {}
 	};
-	if (item.pageSize < mtMaxSize) {
+	if (cloneNewItem.pageSize < mtMaxSize) {
 		dynamicPageItem.beganIndex = 0;
-		dynamicPageItem.endIndex = item.pageSize;
-		dynamicPageItem.calcPage = ++page;
+		dynamicPageItem.endIndex = cloneNewItem.pageSize;
+		dynamicPageItem.calcPage = ++calcPage;
 		dynamicPageItem.isAdd = true;
-		dynamicPageItem.name = item.name;
-		dynamicPageItem.addPageHeight = minSizeHeight(item.size);
-		dynamicPageItem.dataObj = cloneDeep(item.dataObj);
-		temp.push(dynamicPageItem);
+		dynamicPageItem.name = cloneNewItem.name;
+		dynamicPageItem.addPageHeight = minSizeHeight(cloneNewItem.size);
+		dynamicPageItem.dataObj = cloneDeep(cloneNewItem.dataObj);
+		tempTbArr.push(dynamicPageItem);
 	} else {
-		const size = (item.pageSize - 21) / 26 + 1;
+		const sizeNum = Math.ceil((cloneNewItem.pageSize - 21) / 26 + 1);
 
-		if (size > 2) {
+		if (sizeNum > 2) {
 			// 234
-			for (let i = 0; i < size; i++) {
+			for (let i = 0; i < sizeNum; i++) {
 				if (i === 0) {
 					dynamicPageItem.beganIndex = 0;
 					dynamicPageItem.endIndex = mtMaxSize;
-					dynamicPageItem.calcPage = ++page;
+					dynamicPageItem.calcPage = ++calcPage;
 					dynamicPageItem.isAdd = true;
-					dynamicPageItem.name = item.name;
+					dynamicPageItem.name = cloneNewItem.name;
 					dynamicPageItem.addPageHeight = 2915; // 无所谓
-					dynamicPageItem.dataObj = cloneDeep(item.dataObj);
-				} else if (i > 0 && i < size - 1) {
+					dynamicPageItem.dataObj = cloneDeep(cloneNewItem.dataObj);
+				} else if (i > 0 && i < sizeNum - 1) {
 					dynamicPageItem.beganIndex = mtMaxSize + maxSize * (i - 1);
 					dynamicPageItem.endIndex = mtMaxSize + maxSize * i;
-					dynamicPageItem.calcPage = ++page;
+					dynamicPageItem.calcPage = ++calcPage;
 					dynamicPageItem.isAdd = true;
-					dynamicPageItem.name = item.name;
+					dynamicPageItem.name = cloneNewItem.name;
 					dynamicPageItem.addPageHeight = 2915; // 无所谓
-					dynamicPageItem.dataObj = cloneDeep(item.dataObj);
+					dynamicPageItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 				} else {
-					const lastPageLeftSize = item.pageSize - mtMaxSize - (i - 1) * maxSize;
-					dynamicPageItem.beganIndex = item.pageSize - lastPageLeftSize;
-					dynamicPageItem.endIndex = item.pageSize - 1;
-					dynamicPageItem.calcPage = ++page;
+					const lastPageLeftSize = cloneNewItem.pageSize - mtMaxSize - (i - 1) * maxSize;
+					dynamicPageItem.beganIndex = cloneNewItem.pageSize - lastPageLeftSize;
+					dynamicPageItem.endIndex = cloneNewItem.pageSize - 1;
+					dynamicPageItem.calcPage = ++calcPage;
 					dynamicPageItem.isAdd = true;
-					dynamicPageItem.name = item.name;
-					dynamicPageItem.addPageHeight = newTableLeftPage_addPageHeight({ item, lastPageLeftSize });
-					dynamicPageItem.dataObj = cloneDeep(item.dataObj);
+					dynamicPageItem.name = cloneNewItem.name;
+					dynamicPageItem.addPageHeight = newTableLeftPage_addPageHeight({ item: cloneNewItem, lastPageLeftSize });
+					dynamicPageItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 				}
-				temp.push(dynamicPageItem);
+				tempTbArr.push(dynamicPageItem);
 			}
 		} else {
 			// 1 2,
-			for (let i = 0; i < size; i++) {
-				const lastPageLeftSize = item.pageSize - mtMaxSize;
-				if (i === 0) {
+			for (let j = 0; j < sizeNum; j++) {
+				const lastPageLeftSize = cloneNewItem.pageSize - mtMaxSize;
+				if (j === 0) {
 					dynamicPageItem.beganIndex = 0;
 					dynamicPageItem.endIndex = mtMaxSize;
-					dynamicPageItem.calcPage = ++page;
+					dynamicPageItem.calcPage = ++calcPage;
 					dynamicPageItem.isAdd = true;
-					dynamicPageItem.name = item.name;
+					dynamicPageItem.name = cloneNewItem.name;
 					dynamicPageItem.addPageHeight = 2915; // 无所谓
-					dynamicPageItem.dataObj = cloneDeep(item.dataObj);
+					dynamicPageItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 				} else {
 					dynamicPageItem.beganIndex = mtMaxSize;
-					dynamicPageItem.endIndex = item.pageSize - 1;
-					dynamicPageItem.calcPage = ++page;
+					dynamicPageItem.endIndex = cloneNewItem.pageSize - 1;
+					dynamicPageItem.calcPage = ++calcPage;
 					dynamicPageItem.isAdd = true;
-					dynamicPageItem.name = item.name;
-					dynamicPageItem.addPageHeight = newTableLeftPage_addPageHeight({ item, lastPageLeftSize });
-					dynamicPageItem.dataObj = cloneDeep(item.dataObj);
+					dynamicPageItem.name = cloneNewItem.name;
+					dynamicPageItem.addPageHeight = newTableLeftPage_addPageHeight({ item:cloneNewItem, lastPageLeftSize });
+					dynamicPageItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 				}
-				temp.push(dynamicPageItem);
+				tempTbArr.push(dynamicPageItem);
 			}
 		}
 	}
 
-	item.calcAddInfoArr = temp;
-	item.reAddPageHeight = temp[temp.length - 1].addPageHeight;
-	item.calcPage = temp[temp.length - 1].page;
-	console.log('calcNewTable item', item);
-	return item;
+	cloneNewItem.calcAddInfoArr = tempTbArr;
+	cloneNewItem.reAddPageHeight = tempTbArr[tempTbArr.length - 1].addPageHeight;
+	cloneNewItem.calcPage = tempTbArr[tempTbArr.length - 1].page;
+	console.log('calcNewTable item', cloneNewItem);
+	return cloneNewItem;
 };
 
 export const calcAddPageInfo = ({ needPageSize, curPageleftSize, lastPageLeftSize, item, page, addPageHeight }) => {
-	let temp = [];
+	let tempInfoArr = [];
+	console.log('calcAddPageInfo page ----', page)
 	let calcPage = page;
 	// pageHeight -(lastPageLeftSize * rowItemHeight + headerHeight)
 	// 需要的页数大于一页
@@ -165,7 +169,7 @@ export const calcAddPageInfo = ({ needPageSize, curPageleftSize, lastPageLeftSiz
 				dynamicPageItem.dataObj.showSummary = true;
 				console.log('log2');
 			}
-			temp.push(dynamicPageItem);
+			tempInfoArr.push(dynamicPageItem);
 		}
 
 		if (needPageSize === 1) {
@@ -194,16 +198,17 @@ export const calcAddPageInfo = ({ needPageSize, curPageleftSize, lastPageLeftSiz
 			}
 
 			console.log('dynamicPageItem', dynamicPageItem);
-			temp.push(dynamicPageItem);
+			tempInfoArr.push(dynamicPageItem);
 		}
 	}
-	console.log('temp', temp);
-	return temp;
+	console.log('tempInfoArr', tempInfoArr);
+	return tempInfoArr;
 };
 
 export const calcMaxAddSize = (addPageHeight, size, item, page) => {
 	console.log('addPageHeight', addPageHeight);
 	console.log('size', size);
+	console.log('calcMaxAddSize page',page)
 
 	// 当前页剩余还能放多少条,需要根据是不是新table， 是 501 ，不是
 	const curPageleftSize = canAddSize({ addPageHeight, item });
@@ -235,10 +240,12 @@ export const calcMaxAddSize = (addPageHeight, size, item, page) => {
 	};
 }
 
+// ....
 export const calcPageSplit = (arr) => {
+	const cloneSpliteArr = cloneDeep(arr)
 	let page = 1;
 	let addPageHeight = 0;
-	let temp  = arr.map((item, index) => {
+	let splitTemp  = cloneSpliteArr.map((splitItem, index) => {
 		let addInfoArr = [];
 		let isAdd = false;
 		let needPageSizeInit = 0;
@@ -247,8 +254,13 @@ export const calcPageSplit = (arr) => {
 			if (addPageHeight + arr[index].height > pageHeight) {
 				if (arr[index].type) {
 					console.log('arr[index].type');
-					// 动态组件 不够放，判断能不能放下最小1条的带头的动态组件
-					if (addPageHeight + minSizeHeight(3) < pageHeight) {
+					// 动态组件 不够放，判断能不能放下最小3条的带头的动态组件
+
+					// if(pageHeight - addPageHeight >  minSizeHeight(3))
+
+					// if (addPageHeight + minSizeHeight(3)  > pageHeight) {
+						console.log('chuan page', page)
+					if(pageHeight - addPageHeight > (minSizeHeight(3) + 300) ){
 						const {
 							curPageleftSize,
 							needPageSize,
@@ -256,7 +268,7 @@ export const calcPageSplit = (arr) => {
 							// lastPageLeftSize,
 							reAddPageHeight,
 							calcPage
-						} = calcMaxAddSize(addPageHeight, arr[index].pageSize, item, page);
+						} = calcMaxAddSize(addPageHeight, arr[index].pageSize, splitItem, page);
 						// 动态组件
 						curPageleftSizeInit = curPageleftSize;
 						needPageSizeInit = needPageSize;
@@ -265,8 +277,9 @@ export const calcPageSplit = (arr) => {
 						addPageHeight = reAddPageHeight;
 						addInfoArr = calcAddInfoArr;
 					} else {
+						console.log('calcNewTable item', splitItem)
 						// 新table重新起步
-						const { calcPage, reAddPageHeight, calcAddInfoArr } = calcNewTable(0, item, page);
+						const { calcPage, reAddPageHeight, calcAddInfoArr } = calcNewTable(splitItem, page);
 						page = calcPage;
 						console.log('page', page);
 						addPageHeight = reAddPageHeight;
@@ -282,51 +295,51 @@ export const calcPageSplit = (arr) => {
 				isAdd = false;
 			}
 		}
-		item.curPageleftSize = curPageleftSizeInit;
-		item.needPageSize = needPageSizeInit;
-		item.isAdd = isAdd;
-		item.addInfoArr = addInfoArr;
-		item.page = page;
-		item.addPageHeight = addPageHeight;
-		return item;
+		splitItem.curPageleftSize = curPageleftSizeInit;
+		splitItem.needPageSize = needPageSizeInit;
+		splitItem.isAdd = isAdd;
+		splitItem.addInfoArr = addInfoArr;
+		splitItem.page = page;
+		splitItem.addPageHeight = addPageHeight;
+		return splitItem;
 	});
-	return temp
+	return splitTemp
 }
 
 export const calcLayoutModule = (moduleArr) => {
-	const  calcArrStep1 = calcPageSplit(moduleArr)
+	const  calcArrStep1 = cloneDeep(calcPageSplit(moduleArr))
 	console.log('calcArrStep1', calcArrStep1)
 	const calcArrStep3 = [];
-	calcArrStep1.forEach((m) => {
-		if (m.addInfoArr.length > 0) {
-			calcArrStep3.push(...m.addInfoArr);
+	calcArrStep1.forEach((calcArrStep1Item) => {
+		if (calcArrStep1Item.addInfoArr.length > 0) {
+			calcArrStep3.push(...calcArrStep1Item.addInfoArr);
 		} else {
-			calcArrStep3.push(m);
+			calcArrStep3.push(calcArrStep1Item);
 		}
 	});
 	console.log('calcArrStep3', calcArrStep3);
-	const calcArrStep4 = calcArrStep3.map((m) => {
-		if (m.calcPage) {
-			m.page = m.calcPage;
+	const calcArrStep4 = calcArrStep3.map((calcArrStep3Item) => {
+		if (calcArrStep3Item.calcPage) {
+			calcArrStep3Item.page = calcArrStep3Item.calcPage;
 		}
 		if (
-			(m.beganIndex === 0 && m.endIndex && m.dataObj && m.dataObj.tbData) ||
-			(m.beganIndex && m.endIndex && m.dataObj && m.dataObj.tbData)
+			(calcArrStep3Item.beganIndex === 0 && calcArrStep3Item.endIndex && calcArrStep3Item.dataObj && calcArrStep3Item.dataObj.tbData) ||
+			(calcArrStep3Item.beganIndex && calcArrStep3Item.endIndex && calcArrStep3Item.dataObj && calcArrStep3Item.dataObj.tbData)
 		) {
-			m.dataObj.tbData = sliceTbData({
-				beganIndex: m.beganIndex,
-				endIndex: m.endIndex,
-				sliceData: m.dataObj.tbData
+			calcArrStep3Item.dataObj.tbData = sliceTbData({
+				beganIndex: calcArrStep3Item.beganIndex,
+				endIndex: calcArrStep3Item.endIndex,
+				sliceData: calcArrStep3Item.dataObj.tbData
 			});
 		}
-		return m;
+		return calcArrStep3Item;
 	});
 	console.log('calcArrStep4', calcArrStep4);
 
 	let map = new Map();
 	let transRes = [];
-	calcArrStep4.forEach((item) => {
-		map.has(item.page) ? map.get(item.page).push(item) : map.set(item.page, [ item ]);
+	calcArrStep4.forEach((calcArrStep4Item) => {
+		map.has(calcArrStep4Item.page) ? map.get(calcArrStep4Item.page).push(calcArrStep4Item) : map.set(calcArrStep4Item.page, [ calcArrStep4Item ]);
 	});
 	transRes = [ ...map.values() ];
 	console.log('transRes', transRes);
@@ -344,24 +357,21 @@ export const calcAddPageHeight = (item) => {
 };
 
 // 计算全table的高度
-export const calcHeight = (tbData) => {
+export const calcHeight = (data) => {
+	// console.log('calcHeight data--', data)
 	// 200 table container marginTop
 	// 86 title height
 	// 65 注释 height + marginTop
 	// 50 talbe marginTop
 	// 110 ?是否有合计
 	// 110 表头
-	const pageSize = tbData.data && tbData.data.length > 0 ? tbData.data.length : 1;
+	const pageSize = data && data.tbData.length > 0 ? data.tbData.length : 1;
 	const height =
-		200 +
-		86 +
-		65 +
-		50 +
-		tbHeaderOffsetTop +
+		pageInfoMarginTitleTipHeight() +
 		headerHeight +
 		bomTableHeight +
 		rowItemHeight * pageSize +
-		(tbData.showSummary ? bomTableHeight : 0);
+		(data.tbData.showSummary ? bomTableHeight : 0);
 	return { height, pageSize };
 };
 
@@ -374,13 +384,10 @@ export const calcMinHeight = () => {
 };
 
 export const createRandomHeight = (arr, num) => {
-	console.log('createRandomHeight arr', arr);
 	const n = num || parseInt(Math.random() * 20);
 	const temp = [];
 	for (let i = 0; i < n; i++) {
-		// for(let j = 0;j < arr.length; j++){
 		temp.push(arr[i]);
-		// }
 	}
 	console.log('createRandomHeight temp', temp);
 	return temp;
@@ -401,12 +408,12 @@ export const canAddSize = ({ addPageHeight, item }) => {
 };
 
 export const newTableMinHeight = () => {
-	return 200 + 86 + 65 + 50 + 110 + 110;
+	return pageInfoMarginTitleTipHeight() + 110 + 110;
 };
 
 // 计算n 条数据单独新的 只有一页 动态table的高度（n < 21）
 export const minSizeHeight = (num) => {
-	return 200 + 86 + 65 + 50 + 110 + 110 + 110 * num;
+	return pageInfoMarginTitleTipHeight()+ 110 + 110 + 110 * num;
 };
 
 // mark 合计
@@ -416,7 +423,7 @@ export const unBeganMinHeight = () => {
 
 // 计算剩余还能添加多少条用到的高度
 export const beganMinHeight = () => {
-	return 200 + 86 + 65 + 50 + 110 + 110;
+	return pageInfoMarginTitleTipHeight() + 110 + 110;
 };
 
 export const calcMaxSize = (item) => {
