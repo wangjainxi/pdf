@@ -51,8 +51,8 @@ import {
   hisIncome,
   dealRecord,
   pieOption,
-  // } from "./ramdomData";
-} from "./mockData";
+  } from "./ramdomData";
+// } from "./mockData";
 
 export default {
   head() {

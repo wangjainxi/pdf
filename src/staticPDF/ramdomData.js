@@ -1,5 +1,5 @@
 const ramdomNum = () =>{
-   return Math.random() * 3000
+   return Math.random() * 2
 //    return 350
 }
 
