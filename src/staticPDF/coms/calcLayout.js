@@ -8,27 +8,20 @@ const bomTableHeight = 110;
 const pageHeight = 3025;
 const maxSize = 24; // 26.5
 const mtMaxSize = 21; // 22.9
-
 const titleMarginTop = 200;
 const titleHeight = 86;
 const tipHeight_add_MarginTop = 65;
 const table_marginTop = 50;
 const sumerryHeight = 110;
-
 const warnHeight = 200;
 
-// const ramDomNum = 200
-// 200 table container marginTop
-// 86 title height
-// 65 注释 height + marginTop
-// 50 talbe marginTop
-// 110 ?是否有合计
-// 110 表头
 import { cloneDeep } from 'lodash';
+/**
+ *  将数据源format成动态pdf布局需要的数据
+ */
 export const calcLayoutModule = (moduleArr) => {
-	console.log('moduleArr--------------------------moduleArr--', moduleArr);
 
-	// 走新table分页逻辑
+	// 新起table分页逻辑
 	function calcNewTable(splitItem, calcPageNum) {
 		const cloneNewItem = cloneDeep(splitItem);
 		let calcPage = cloneDeep(calcPageNum);
@@ -56,7 +49,6 @@ export const calcLayoutModule = (moduleArr) => {
 			const sizeNum = Math.ceil((cloneNewItem.pageSize - mtMaxSize) / maxSize + 1);
 			if (sizeNum > 2) {
 				// 234
-
 				for (let numTFlag = 0; numTFlag < sizeNum; numTFlag++) {
 					let dynamicNewTbItem = cloneDeep({
 						beganIndex: 0,
@@ -141,6 +133,7 @@ export const calcLayoutModule = (moduleArr) => {
 		return cloneNewItem;
 	}
 
+	// 计算新加页面需要的信息
 	function calcAddPageInfo({ needPageSize, curPageleftSize, lastPageLeftSize, item, calcPageNum, addPageHeight }) {
 		let tempInfoArr = [];
 		const addPageDb3InfoItem = cloneDeep(item);
@@ -179,7 +172,6 @@ export const calcLayoutModule = (moduleArr) => {
 					dynamicAddPageItem.dataObj.showSummary = false;
 				} else {
 					// 返回增加的最后一页的 第一行的索引 和 最后一行的索引
-
 					dynamicAddPageItem.beganIndex = curPageleftSize + maxSize * (i - 1);
 					dynamicAddPageItem.endIndex = addPageDb3InfoItem.pageSize - 1;
 					dynamicAddPageItem.calcPage = ++calcPage;
@@ -219,6 +211,7 @@ export const calcLayoutModule = (moduleArr) => {
 		return tempInfoArr;
 	}
 
+	// 计算还需要增加的页面条数
 	function calcMaxAddSize(addPageHeight, size, splitItem, calcPageNum) {
 		const calcDB1AddSizeItem = cloneDeep(splitItem);
 		// 当前页剩余还能放多少条,需要根据是不是新table， 是 501 ，不是
@@ -248,7 +241,7 @@ export const calcLayoutModule = (moduleArr) => {
 		};
 	}
 
-	// ....
+	// 计算分页
 	function calcPageSplit(arr) {
 		const cloneSpliteArr = cloneDeep(arr);
 		let calcPageNum = 1;
@@ -308,6 +301,7 @@ export const calcLayoutModule = (moduleArr) => {
 	const calcArrStep1 = cloneDeep(calcPageSplit(moduleArr));
 
 	// console.log('calcArrStep1', calcArrStep1);
+	// 组装数据
 	const calcArrStep2 = [];
 	calcArrStep1.forEach((calcArrStep1Item) => {
 		if (calcArrStep1Item.addInfoArr.length > 0) {
@@ -317,7 +311,7 @@ export const calcLayoutModule = (moduleArr) => {
 		}
 	});
 
-	// console.log('calcArrStep2', calcArrStep2);
+	// 重新赋值calcPageNum
 	const calcArrStep3 = calcArrStep2.map((calcArrStep2ItemData) => {
 		const calcArrStep3Item = cloneDeep(calcArrStep2ItemData);
 		if (calcArrStep3Item.calcPage) {
@@ -327,6 +321,7 @@ export const calcLayoutModule = (moduleArr) => {
 		return calcArrStep3Item;
 	});
 
+	// 截取table表格数据
 	const calcArrStep4 = calcArrStep3.map((calcArrStep3ItemData) => {
 		const calcArrStep3Item = cloneDeep(calcArrStep3ItemData);
 		if (
@@ -353,6 +348,8 @@ export const calcLayoutModule = (moduleArr) => {
 
 	let map = new Map();
 	let transRes = [];
+
+	// 将数据格式化成二维数组
 	calcArrStep4.forEach((calcArrStep4Item) => {
 		map.has(calcArrStep4Item.calcPageNum)
 			? map.get(calcArrStep4Item.calcPageNum).push(calcArrStep4Item)
@@ -363,7 +360,9 @@ export const calcLayoutModule = (moduleArr) => {
 	return transRes;
 };
 
-// 计算当前新开页面的 pageHeight
+/**
+ *  计算当前新开页面的 pageHeight
+ */
 export const calcAddPageHeight = (item) => {
 	let n = 0;
 	// 是否大于最大条数 是否有summerry
@@ -373,14 +372,17 @@ export const calcAddPageHeight = (item) => {
 	}
 };
 
-// 计算全table的高度
+/**
+ *  计算全table的高度
+ * 	200 table container marginTop
+ * 	86 title height
+ * 	65 注释 height + marginTop
+ * 	50 talbe marginTop
+ * 	110 ?是否有合计
+ * 	110 表头
+ */
 export const calcHeight = (data) => {
-	// 200 table container marginTop
-	// 86 title height
-	// 65 注释 height + marginTop
-	// 50 talbe marginTop
-	// 110 ?是否有合计
-	// 110 表头
+
 	const pageSize = data && data.tbData.length > 0 ? data.tbData.length : 1;
 	const height =
 		pageInfoMarginTitleTipHeight() +
@@ -391,13 +393,20 @@ export const calcHeight = (data) => {
 	return { height, pageSize };
 };
 
-// 计算最小需要多少空间
+/**
+ * 计算最小需要多少空间
+ */
 export const calcMinHeight = () => {
 	const minSize = 1; // 剩余空间 可以至少放1条
 	const minHeight = tbHeaderOffsetTop + headerHeight + bomTableHeight + rowItemHeight * minSize;
 	return minHeight;
 };
 
+/**
+ * 随机创建动态数据
+ * @param {*} arr 整合好的model源
+ * @param {*} num 数量
+ */
 export const createRandomHeight = (arr, num) => {
 	const n = num || parseInt(Math.random() * 20);
 	const temp = [];
@@ -407,6 +416,11 @@ export const createRandomHeight = (arr, num) => {
 	return temp;
 };
 
+/**
+ * 计算可添加的条数
+ * @param {*} calcDB1AddSizeItem
+ * @param {*} addPageHeight 页面累计高度
+ */
 export const canAddSize = ({ calcDB1AddSizeItem, addPageHeight }) => {
 	const calcDB2cAddSizeItem = cloneDeep(calcDB1AddSizeItem);
 	const height = beganMinHeight(calcDB2cAddSizeItem);
@@ -420,33 +434,31 @@ export const canAddSize = ({ calcDB1AddSizeItem, addPageHeight }) => {
 	return sizeDB1Num;
 };
 
-export const newTableMinHeight = () => {
-	return pageInfoMarginTitleTipHeight() + 110 + 110;
-};
-
-// 计算n 条数据单独新的 只有一页 动态table的高度（n < 21）
+/**
+ * 计算n 条数据单独新的 只有一页 动态table的高度（n < 21）
+ * @param {*} num 数据条数
+ */
 export const minSizeHeight = (num) => {
 	return pageInfoMarginTitleTipHeight() + 110 + 110 + 110 * num;
 };
 
-// mark 合计
+/**
+ * 不是新加的table需要的高度
+ */
 export const unBeganMinHeight = () => {
 	return 110 + 110;
 };
 
-// 计算剩余还能添加多少条用到的高度
+/**
+ * 计算剩余还能添加多少条用到的高度
+ */
 export const beganMinHeight = () => {
 	return pageInfoMarginTitleTipHeight() + 110 + 110;
 };
 
-export const calcMaxSize = (item) => {
-	if (item.isNewTable) {
-		return mtMaxSize;
-	} else {
-		return maxSize;
-	}
-};
-
+/**
+ * 截取table数据
+ */
 export const sliceTbData = ({ beganIndex, endIndex, sliceData }) => {
 	if (beganIndex === endIndex) {
 		return sliceData.slice(beganIndex);
@@ -454,22 +466,30 @@ export const sliceTbData = ({ beganIndex, endIndex, sliceData }) => {
 	return sliceData.slice(beganIndex, endIndex);
 };
 
+/**
+ * 计算表格基本说明信息高度
+ * 86 title height
+ * 65 注释 height + marginTop
+ * 50 talbe marginTop
+ * 110 ?是否有合计
+ * 100 表头
+ * 110 至少一条数据
+ * 200 + 86 + 65 + 50 + 110 + 110;
+ */
 export const pageInfoMarginTitleTipHeight = () => {
-	// 86 title height
-	// 65 注释 height + marginTop
-	// 50 talbe marginTop
-	// 110 ?是否有合计
-	// 100 表头
-	// 110 至少一条数据
-	// 200 + 86 + 65 + 50 + 110 + 110;
 	return titleMarginTop + titleHeight + tipHeight_add_MarginTop + table_marginTop;
 };
 
+/**
+ * 计算是否有合计的table高度
+ */
 export const staticHeight_hasSummary = ({ item }) => {
 	return pageInfoMarginTitleTipHeight() + item && item.showSummary ? sumerryHeight : 0;
 };
 
-// 新table 最后一页的 addPageHeight
+/**
+ * 新table 最后一页的 addPageHeight
+ */
 export const newTableLeftPage_addPageHeight = ({ item, lastPageLeftSize }) => {
 	const n = staticHeight_hasSummary({ item }) + lastPageLeftSize * rowItemHeight;
 	return n;
