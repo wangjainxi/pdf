@@ -21,7 +21,8 @@
         :comsData="comsData"
         id="contentPageOne"
       ></content-page-one> -->
-      <ContentPageOne :comsData="comsData" />
+      <!-- <ContentPageOne :comsData="comsData" /> -->
+      <ContentPageOne :id="'ContentPageOne'+index" v-for="(layoutItem, index) in comsData" :key="'layout'+index" :layoutItem="layoutItem" />
       <end-page id="endPage"></end-page>
     </div>
   </section>

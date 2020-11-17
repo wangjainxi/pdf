@@ -1,18 +1,19 @@
 <template>
   <div>
-    <div v-for="(layoutItem, index) in comsData" :key="'layout'+index">
-      <!-- <div v-if="layoutItem.length > 0"> -->
+    <!-- <div v-for="(layoutItem, index) in comsData" :key="'layout'+index">
         <layout :headerType="'paddingShort'">
           <div v-for="(moduleItem, idx) in layoutItem" :key="idx.name" >
             <div class="content-page-container">
-              <!-- <div v-if="idx ===  4"> -->
               <component :is="moduleItem.name" v-bind="$attrs" v-if="moduleItem.dataObj" :dataObj="moduleItem.dataObj"/>
-              <!-- </div> -->
             </div>
           </div>
         </layout>
-      <!-- </div> -->
+    </div> -->
+     <layout :headerType="'paddingShort'">
+    <div class="content-page-container" v-for="(moduleItem, idx) in layoutItem" :key="idx.name">
+      <component :is="moduleItem.name" v-bind="$attrs" v-if="moduleItem.dataObj" :dataObj="moduleItem.dataObj"/>
     </div>
+  </layout>
   </div>
 </template>
 
@@ -34,6 +35,7 @@ export default {
     addTableContainer
   },
   props: {
+    layoutItem: Array,
     comsData: Array,
     rateDes: String,// 表格的汇率描述
     periodAsset: Array,// 期末资产
