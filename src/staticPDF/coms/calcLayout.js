@@ -70,8 +70,8 @@ export const calcLayoutModule = (moduleArr) => {
 						dynamicNewTbItem.dataObj = cloneDeep(cloneNewItem.dataObj);
 						dynamicNewTbItem.dataObj.showSummary = false;
 					} else if (numTFlag > 0 && numTFlag < (sizeNum - 1)) {
-						dynamicNewTbItem.beganIndex = mtMaxSize + mtMaxSize * (numTFlag - 1);
-						dynamicNewTbItem.endIndex = mtMaxSize + (maxSize * numTFlag) - 1;
+						dynamicNewTbItem.beganIndex = mtMaxSize + maxSize * (numTFlag - 1);
+						dynamicNewTbItem.endIndex = mtMaxSize + maxSize * numTFlag;
 						dynamicNewTbItem.calcPage = ++calcPage;
 						dynamicNewTbItem.isAdd = true;
 						dynamicNewTbItem.name = 'addTableContainer';
@@ -80,7 +80,7 @@ export const calcLayoutModule = (moduleArr) => {
 						dynamicNewTbItem.dataObj.showSummary = false;
 						console.log(' cloneNewItem.name', cloneNewItem.name);
 					} else {
-						const lastPageLeftSize = cloneNewItem.pageSize - mtMaxSize - (numTFlag - 1) * maxSize + 1;
+						const lastPageLeftSize = cloneNewItem.pageSize - mtMaxSize - ((numTFlag - 1) * maxSize) ;
 						dynamicNewTbItem.beganIndex = cloneNewItem.pageSize - lastPageLeftSize;
 						dynamicNewTbItem.endIndex = cloneNewItem.pageSize;
 						dynamicNewTbItem.calcPage = ++calcPage;
@@ -187,7 +187,7 @@ export const calcLayoutModule = (moduleArr) => {
 					dynamicAddPageItem.endIndex = addPageDb3InfoItem.pageSize + 1;
 					dynamicAddPageItem.calcPage = ++calcPage;
 					dynamicAddPageItem.addPageHeight =
-					lastPageLeftSize * rowItemHeight + headerHeight + item.showSummary ? 110 : 0;
+					lastPageLeftSize * rowItemHeight + headerHeight + (item.showSummary ? 110 : 0) + warnHeight;
 					dynamicAddPageItem.isAdd = true;
 					dynamicAddPageItem.type = 1;
 					dynamicAddPageItem.name = 'addTableContainer';
@@ -211,7 +211,7 @@ export const calcLayoutModule = (moduleArr) => {
 					dynamicAddPageItem.endIndex = addPageDb3InfoItem.pageSize;
 					dynamicAddPageItem.calcPage = ++calcPage;
 					dynamicAddPageItem.addPageHeight =
-						lastPageLeftSize * rowItemHeight + headerHeight + (item.showSummary ? 110 : 0);
+						lastPageLeftSize * rowItemHeight + headerHeight + (item.showSummary ? 110 : 0) + warnHeight;
 					dynamicAddPageItem.isAdd = true;
 					dynamicAddPageItem.type = 1;
 					dynamicAddPageItem.name = 'addTableContainer';
@@ -507,13 +507,13 @@ export const pageInfoMarginTitleTipHeight = () => {
  * 计算是否有合计的table高度
  */
 export const staticHeight_hasSummary = ({ item }) => {
-	return pageInfoMarginTitleTipHeight() + item && item.showSummary ? sumerryHeight : 0;
+	return pageInfoMarginTitleTipHeight() + (item && item.showSummary ? sumerryHeight : 0)
 };
 
 /**
  * 新table 最后一页的 addPageHeight
  */
 export const newTableLeftPage_addPageHeight = ({ item, lastPageLeftSize }) => {
-	const n = staticHeight_hasSummary({ item }) + lastPageLeftSize * rowItemHeight + 220;
+	const n = staticHeight_hasSummary({ item }) + lastPageLeftSize * rowItemHeight + 440;
 	return n;
 };
